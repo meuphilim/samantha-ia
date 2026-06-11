@@ -1,94 +1,184 @@
-# llamafile
+# 🌸 Samantha — Assistente Pessoal de IA
 
-<img src="docs/images/llamafile-640x640.png" width="320" height="320"
-     alt="[line drawing of llama animal head in front of slightly open manilla folder filled with files]">
+**Samantha** é uma assistente pessoal de inteligência artificial baseada em **[llamafile](https://github.com/mozilla-ai/llamafile)** (Mozilla AI), projetada para oferecer uma experiência **100% local**, privada e eficiente, com interface em **Português Brasileiro**.
 
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/mozilla-ai/llamafile/blob/main/LICENSE)
-[![ci status](https://github.com/mozilla-ai/llamafile/actions/workflows/ci.yml/badge.svg)](https://github.com/mozilla-ai/llamafile/actions/workflows/ci.yml)
-[![Based on llama.cpp](https://img.shields.io/badge/llama.cpp-7f5ee54-orange.svg)](https://github.com/ggml-org/llama.cpp/commit/7f5ee54)
-[![Based on whisper.cpp](https://img.shields.io/badge/whisper.cpp-2eeeba5-green.svg)](https://github.com/ggml-org/whisper.cpp/commit/2eeeba5)
-[![Discord](https://dcbadge.limes.pink/api/server/YuMNeuKStr?style=flat)](https://discord.gg/YuMNeuKStr)
-[![Mozilla Builders](https://img.shields.io/badge/Builders-6E6E6E?logo=mozilla&logoColor=white&labelColor=4A4A4A)](https://builders.mozilla.org/)
+![sakura](llama.cpp/tools/ui/static/sakura.webp)
 
-**llamafile lets you distribute and run LLMs with a single file.**
+> "Toda grande ideia começa com uma conversa. Algumas delas continuam evoluindo linha por linha de código."
 
-llamafile is a [Mozilla Builders](https://builders.mozilla.org/) project (see its [announcement blog post](https://hacks.mozilla.org/2023/11/introducing-llamafile/)), now revamped by [Mozilla.ai](https://www.mozilla.ai/open-tools/llamafile). 
+---
 
-Our goal is to make open LLMs much more
-accessible to both developers and end users. We're doing that by
-combining [llama.cpp](https://github.com/ggerganov/llama.cpp) with [Cosmopolitan Libc](https://github.com/jart/cosmopolitan) into one
-framework that collapses all the complexity of LLMs down to
-a single-file executable (called a "llamafile") that runs
-locally on most operating systems and CPU archiectures, with no installation.
+## ✨ Visão Geral
 
-llamafile also includes **[whisperfile](https://docs.mozilla.ai/llamafile/whisperfile)**, a single-file speech-to-text tool built on [whisper.cpp](https://github.com/ggerganov/whisper.cpp) and the same Cosmopolitan packaging. It supports transcription and translation of audio files across all the same platforms, with no installation required.
+| Característica | Detalhe |
+|----------------|---------|
+| **Engine** | [llamafile](https://github.com/mozilla-ai/llamafile) v0.10.3 |
+| **Modelo** | Qwen3.5-4B (GGUF Q4_K_S) |
+| **Runtime** | Llamafile (Cosmopolitan Libc) |
+| **Interface** | Svelte 5 + Vite 7 + Tailwind CSS 4 |
+| **Idioma** | Português Brasileiro (pt-BR) |
+| **Licença** | Apache 2.0 |
 
+### Filosofia
 
-## v0.10.*
+Samantha foi concebida com uma filosofia **Local First** — seus dados permanecem sob seu controle com processamento local, sem dependências de nuvem. O llamafile empacota modelo, runtime e infraestrutura em um único executável portátil.
 
-**llamafile versions starting from 0.10.0 use a new build system**, aimed at keeping our code more easily 
-aligned with the latest versions of llama.cpp. This means they support more recent models and functionalities,
-but at the same time they might be missing some of
-the features you were accustomed to (check out [this doc](README_0.10.0.md) for a high-level description of what has been done). If you liked
-the "classic experience" more, you will always be able to access the previous versions from our
-[releases](https://github.com/mozilla-ai/llamafile/releases) page. Our pre-built llamafiles always
-show which version of the server they have been bundled with ([0.9.* example](https://huggingface.co/mozilla-ai/llava-v1.5-7b-llamafile), [0.10.* example](https://huggingface.co/mozilla-ai/llamafile_0.10)), so you will always know
-which version of the software you are downloading.
+---
 
+## 🎨 Personalizações
 
-> **We want to hear from you!**
-Whether you are a new user or a long-time fan, please share what you find most valuable about llamafile and what would make it more useful for you.
-[Read more via the blog](https://blog.mozilla.ai/llamafile-returns/) and add your voice to the discussion [here](https://github.com/mozilla-ai/llamafile/discussions/809).
+### Tema Visual (Samantha-IA Brand)
 
+| Token | Valor |
+|-------|-------|
+| `--samantha-primary` | `oklch(0.52 0.22 264)` — Índigo |
+| `--samantha-accent` | `oklch(0.62 0.17 164)` — Esmeralda |
+| `--samantha-gradient` | Índigo → Violeta (135°) |
 
-## Quick Start
+- Paleta completa em **oklch** com matiz 264 (índigo)
+- **Modo escuro** com deep dark azul-acinzentado
+- **Scrollbars** visíveis apenas no hover, com cor derivada da marca
+- **Fontes**: Inter (sans), JetBrains Mono (mono)
+- Classes utilitárias: `.samantha-glow`, `.samantha-gradient`, `.samantha-text-gradient`
 
-Download and run your first llamafile in minutes:
+### Interface
 
-```sh
-# Download an example model (Qwen3.5 0.8B)
-curl -LO https://huggingface.co/mozilla-ai/llamafile_0.10/resolve/main/Qwen3.5-0.8B-Q8_0.llamafile
+| Componente | Customização |
+|------------|-------------|
+| **Sidebar** | Logo sakura + "Samantha" + "Assistente Pessoal" |
+| **Greeting** | Sakura.webp com glow, saudação em português |
+| **Settings** | Nova aba "Sobre a Samantha" com hero, métricas, capacidades, roadmap, créditos |
+| **Favicon** | Pacote completo (ico, png 16/32, apple-touch-icon) |
+| **Idioma** | Interface completa em Português Brasileiro |
 
-# Make it executable (macOS/Linux/BSD)
-chmod +x Qwen3.5-0.8B-Q8_0.llamafile
+### Arquivos Modificados
 
-# Run it
-./Qwen3.5-0.8B-Q8_0.llamafile
+```
+llama.cpp/tools/ui/
+├── src/
+│   ├── app.css                                    → Tema completo (índigo, dark mode, brand tokens)
+│   ├── app.html                                   → Favicon links atualizados
+│   ├── lib/
+│   │   ├── components/app/
+│   │   │   ├── chat/ChatScreen/ChatScreenGreeting.svelte  → Saudação personalizada
+│   │   │   ├── navigation/SidebarNavigation/              → Header com logo + nome
+│   │   │   └── settings/
+│   │   │       ├── SettingsChat/SettingsChatAboutTab.svelte → ★ NOVO — Aba "Sobre"
+│   │   │       ├── SettingsChat/SettingsChat.svelte        → Render condicional
+│   │   │       └── index.ts                                → Export do AboutTab
+│   │   └── constants/
+│   │       ├── routes.ts                                    → Slug ABOUT
+│   │       ├── settings-registry.ts                         → Seção + pt-BR
+│   │       └── ...                                          → Tradução pt-BR
+│   └── routes/
+│       └── +error.svelte                            → Página de erro traduzida
+└── static/
+    ├── sakura.webp                                  → ★ NOVO — Logo da marca
+    ├── favicon.ico                                  → ★ NOVO
+    ├── favicon-16x16.png                            → ★ NOVO
+    ├── favicon-32x32.png                            → ★ NOVO
+    └── apple-touch-icon.png                         → ★ NOVO
 ```
 
-We chose this model because that's the smallest one we have
-built a llamafile for, so most likely to work out-of-the-box for you.
-If you have powerful hardware and/or GPUs, [feel free to choose](https://docs.mozilla.ai/llamafile/getting-started/pre-built-llamafiles)
-larger and more expressive models which should provide more accurate
-responses.
+---
 
-**Windows users:** Rename the file to add `.exe` extension before running.
+## 🚀 Como Usar
 
-**Note - Only executables under 4GB can run on Windows, so any llamafile above 4GB won't work. Download the [llamafile](https://github.com/mozilla-ai/llamafile/releases) binary and run it with any [external weights/models(GGUF)](https://docs.mozilla.ai/llamafile/getting-started/quickstart#using-llamafile-with-external-weights).**
+### Pré-requisitos
 
-## Documentation
+- Node.js 20+
+- npm ou pnpm
 
-Check the full documentation at [docs.mozilla.ai/llamafile](https://docs.mozilla.ai/llamafile), or directly jump into one of the following subsections:
+### Desenvolvimento (UI com hot reload)
 
-- [Quickstart](https://docs.mozilla.ai/llamafile/getting-started/quickstart)
-- [Pre-built llamafiles](https://docs.mozilla.ai/llamafile/getting-started/pre-built-llamafiles)
-- [Running a llamafile](https://docs.mozilla.ai/llamafile/using-llamafile/running_llamafile)
-- [Creating llamafiles](https://docs.mozilla.ai/llamafile/using-llamafile/creating_llamafiles)
-- [Source installation](https://docs.mozilla.ai/llamafile/using-llamafile/source_installation)
-- [Technical details](https://docs.mozilla.ai/llamafile/reference/technical_details)
-- [Supported Systems](https://docs.mozilla.ai/llamafile/reference/support)
-- [Troubleshooting](https://docs.mozilla.ai/llamafile/reference/troubleshooting)
-- [Whisperfile](https://docs.mozilla.ai/llamafile/whisperfile)
+```bash
+cd llama.cpp/tools/ui
+npm install
+NODE_OPTIONS="--insecure-http-parser" npx vite dev --host 0.0.0.0
+```
 
+Acesse `http://localhost:5173/` — o Vite faz proxy para `localhost:8080` (llama-server).
 
-## Licensing
+### Produção (llamafile)
 
-While the llamafile project is Apache 2.0-licensed, our changes
-to llama.cpp and whisper.cpp are licensed under MIT (just like the projects
-themselves) so as to remain compatible and upstreamable in the future,
-should that be desired.
+```bash
+# Baixar o runtime llamafile e um modelo GGUF
+# Exemplo com o modelo base:
+llamafile -m modelos/qwen3.5-4b-q4_k_s.gguf --server --nobrowser --host 0.0.0.0
+```
 
-The llamafile logo on this page was generated with the assistance of DALL·E 3.
+A UI compilada está em `llama.cpp/tools/ui/dist/` e é servida pelo llamafile em `http://localhost:8080/`.
 
+### Build da UI
 
-[![Star History Chart](https://api.star-history.com/svg?repos=Mozilla-Ocho/llamafile&type=Date)](https://star-history.com/#Mozilla-Ocho/llamafile&Date)
+```bash
+cd llama.cpp/tools/ui
+npm run build
+```
+
+---
+
+## 🏗️ Estrutura do Projeto
+
+```
+D:\Samantha-Agent\
+├── llama.cpp/                 # Engine principal (submódulo)
+│   ├── tools/ui/              # ★ Interface web personalizada (Svelte)
+│   ├── src/                   # Engine C/C++
+│   ├── common/                # Código compartilhado
+│   ├── include/               # Headers
+│   ├── ggml/                  # GGML tensor library
+│   └── models/                # Modelos GGUF
+├── llamafile/                 # Llamafile runtime (Cosmopolitan)
+├── whisper.cpp/               # Reconhecimento de fala
+├── stable-diffusion.cpp/      # Geração de imagens
+├── tools/                     # Ferramentas auxiliares
+├── docs/                      # Documentação técnica
+└── third_party/               # Dependências
+```
+
+---
+
+## 🧠 Capacidades
+
+| Capacidade | Descrição |
+|------------|-----------|
+| 💬 **Conversação Natural** | Contexto, intenções e histórico |
+| 💻 **Desenvolvimento** | React, Node.js, Python, PostgreSQL, Docker |
+| 📄 **Produção de Conteúdo** | E-mails, contratos, propostas |
+| 🎓 **Apoio Educacional** | Simplificação de conceitos técnicos |
+| 🔒 **Privacidade** | 100% offline |
+| ⚡ **Performance** | Modelo Q4_K_S otimizado |
+
+---
+
+## 🗺️ Roadmap
+
+- [ ] Memória persistente (Cross-session)
+- [ ] Integração com Obsidian
+- [ ] Integração com WhatsApp
+- [ ] Agentes especializados em background
+- [ ] Controle de dispositivos locais
+- [ ] RAG Local com embeddings
+- [ ] Interface desktop dedicada
+
+---
+
+## 👥 Equipe
+
+| Papel | Nome |
+|-------|------|
+| **Fundador e Desenvolvedor** | Celso (Meuphilim) |
+| **Co-worker de IA** | Samantha (ChatGPT/Claude) |
+
+---
+
+## 📜 Licença
+
+Este projeto é um fork personalizado do **[llamafile](https://github.com/mozilla-ai/llamafile)** da Mozilla AI, licenciado sob [Apache 2.0](./LICENSE).
+
+> **Nota:** As modificações no `llama.cpp` (engine) mantêm a licença MIT original para compatibilidade upstream.  
+> O README original do llamafile está disponível em [`README_LLAMAFILE.md`](./README_LLAMAFILE.md).
+
+Copyright 2024-2026 — Celso (Meuphilim)  
+Copyright 2023 — Mozilla Foundation
