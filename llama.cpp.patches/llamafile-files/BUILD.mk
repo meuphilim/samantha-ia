@@ -350,9 +350,10 @@ HTTPLIB_OBJS := $(HTTPLIB_SRCS:%.cpp=o/$(MODE)/%.cpp.o)
 # into llama.cpp/tools/ui/dist/. Here we compile embed.cpp with cosmocc
 # (its APE output runs on the host) and run it against whatever's in
 # dist/ to emit ui.cpp/ui.h. With assets present, ui.h defines
-# LLAMA_UI_HAS_ASSETS and server-http.cpp wires up /, /bundle.js,
-# /bundle.css; without them, embed.cpp emits a no-op llama_ui_find_asset
-# and the routes stay unregistered.
+# LLAMA_UI_HAS_ASSETS and server-http.cpp wires up all embedded
+# assets via catch-all routes (/, bundle.js, bundle.css, *.webp,
+# *.png, *.ico, *.svg, etc.); without them, embed.cpp emits a no-op
+# llama_ui_find_asset and the routes stay unregistered.
 
 UI_DIST       := llama.cpp/tools/ui/dist
 UI_GEN_DIR    := o/$(MODE)/llama.cpp/tools/ui
@@ -363,15 +364,9 @@ UI_H_GEN      := $(UI_GEN_DIR)/ui.h
 
 # Assets we ask embed to bundle if they exist. wildcard returns "" for
 # missing files, which lets the build proceed UI-less when offline.
-UI_ASSETS_BUNDLE_CSS := $(wildcard $(UI_DIST)/bundle.css)
-UI_ASSETS_BUNDLE_JS  := $(wildcard $(UI_DIST)/bundle.js)
-UI_ASSETS_INDEX_HTML := $(wildcard $(UI_DIST)/index.html)
-UI_ASSETS_LOADING_HTML := $(wildcard $(UI_DIST)/loading.html)
-UI_ASSETS_FILES := \
-	$(UI_ASSETS_BUNDLE_CSS) \
-	$(UI_ASSETS_BUNDLE_JS) \
-	$(UI_ASSETS_INDEX_HTML) \
-	$(UI_ASSETS_LOADING_HTML)
+# Picks ALL files from dist/ (bundle.js, bundle.css, index.html, loading.html,
+# sakura.webp, favicon.ico, *.png, etc.) so the binary is self-contained.
+UI_ASSET_FILES := $(sort $(filter-out $(UI_DIST)/checksums.txt, $(wildcard $(UI_DIST)/*)))
 
 # Build embed.cpp standalone (no llamafile flags, no llama.cpp includes).
 # cosmoc++ produces an APE that runs on the build host, so we don't need
@@ -382,16 +377,13 @@ $(UI_EMBED_TOOL): $(UI_EMBED_SRC) $(COSMOCC)
 	$(CXX) -O2 -std=gnu++17 -o $@ $<
 
 # Generate ui.cpp/ui.h. Re-run whenever the embed tool or any dist asset
-# changes. The recipe passes <name> <path> pairs only for assets that
-# actually exist on disk; missing files are silently skipped, matching
-# the behaviour of embed.cpp's "no assets -> stub" mode.
-$(UI_CPP_GEN) $(UI_H_GEN) &: $(UI_EMBED_TOOL) $(UI_ASSETS_FILES)
+# changes. The recipe passes <name> <path> pairs for every file in dist/
+# (except checksums.txt from the HF download). When dist/ is empty,
+# embed.cpp emits a no-op stub and the UI routes stay unregistered.
+$(UI_CPP_GEN) $(UI_H_GEN) &: $(UI_EMBED_TOOL) $(UI_ASSET_FILES)
 	@mkdir -p $(UI_GEN_DIR)
 	$(UI_EMBED_TOOL) $(UI_CPP_GEN) $(UI_H_GEN) \
-		$(if $(UI_ASSETS_BUNDLE_CSS),bundle.css $(UI_ASSETS_BUNDLE_CSS)) \
-		$(if $(UI_ASSETS_BUNDLE_JS),bundle.js $(UI_ASSETS_BUNDLE_JS)) \
-		$(if $(UI_ASSETS_INDEX_HTML),index.html $(UI_ASSETS_INDEX_HTML)) \
-		$(if $(UI_ASSETS_LOADING_HTML),loading.html $(UI_ASSETS_LOADING_HTML))
+		$(foreach f,$(UI_ASSET_FILES),$(notdir $(f)) $(f))
 
 # ==============================================================================
 # Tools (in tools/ directory)

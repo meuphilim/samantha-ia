@@ -1,0 +1,40 @@
+diff --git a/tools/server/server-http.cpp b/tools/server/server-http.cpp
+--- a/llama.cpp/tools/server/server-http.cpp
++++ b/llama.cpp/tools/server/server-http.cpp
+@@ -336,6 +336,36 @@ bool server_http_context::init(const common_params & params) {
+             srv->Get(params.api_prefix + "/",           serve_asset("index.html", "text/html; charset=utf-8",              true));
+             srv->Get(params.api_prefix + "/bundle.js",  serve_asset("bundle.js",  "application/javascript; charset=utf-8", false));
+             srv->Get(params.api_prefix + "/bundle.css", serve_asset("bundle.css", "text/css; charset=utf-8",               false));
++
++            // Catch-all for other embedded assets (images, favicons, etc.)
++            // Only matches paths with known static file extensions, so API
++            // routes registered later via get()/post() are not shadowed.
++            srv->Get(params.api_prefix + R"(/(.+)\.(webp|png|ico|svg|json)$)",
++                [](const httplib::Request & req, httplib::Response & res) {
++                    std::string name = req.matches[1].str() + "." + req.matches[2].str();
++
++                    const llama_ui_asset * a = llama_ui_find_asset(name.c_str());
++                    if (!a) {
++                        res.status = 404;
++                        return false;
++                    }
++
++                    static const struct { const char *ext; const char *mime; } mime_tab[] = {
++                        {"webp", "image/webp"},
++                        {"png",  "image/png"},
++                        {"ico",  "image/x-icon"},
++                        {"svg",  "image/svg+xml"},
++                        {"json", "application/json"},
++                    };
++                    const char *mime = "application/octet-stream";
++                    std::string ext = req.matches[2].str();
++                    for (const auto &entry : mime_tab) {
++                        if (ext == entry.ext) { mime = entry.mime; break; }
++                    }
++
++                    res.set_content(reinterpret_cast<const char*>(a->data), a->size, mime);
++                    return false;
++                });
+ #endif
+         }
+     }

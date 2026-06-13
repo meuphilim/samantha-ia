@@ -88,6 +88,34 @@ llama.cpp/tools/ui/
 
 - Node.js 20+
 - npm ou pnpm
+- cosmocc (Cosmopolitan Libc toolchain) — baixado automaticamente por `make setup`
+
+### Compilação Completa (llamafile + UI customizada)
+
+Ordem correta para compilar o binário completo com assets customizados:
+
+```bash
+# 1. Baixar toolchain cosmocc + aplicar patches da engine
+make setup
+
+# 2. Construir a UI com assets customizados (sakura.webp, favicons, pt-BR)
+cd llama.cpp/tools/ui
+npm install
+npm run build
+cd ../..
+
+# 3. Compilar o llamafile
+make -j$(nproc)
+
+# 4. Executar
+./llamafile -m modelo.gguf --server --host 0.0.0.0
+```
+
+> **Nota sobre patches:** `make setup` aplica patches da engine ao submódulo `llama.cpp`
+> (ou manualmente: `bash llama.cpp.patches/apply-patches.sh`).
+> Essas modificações NÃO devem ser commitadas no fork — a fonte de verdade está em
+> `llama.cpp.patches/`. Para restaurar o estado limpo do submódulo:
+> `git -C llama.cpp reset --hard && git -C llama.cpp clean -fdx`
 
 ### Desenvolvimento (UI com hot reload)
 
@@ -98,23 +126,31 @@ NODE_OPTIONS="--insecure-http-parser" npx vite dev --host 0.0.0.0
 ```
 
 Acesse `http://localhost:5173/` — o Vite faz proxy para `localhost:8080` (llama-server).
+A UI compilada estática fica em `llama.cpp/tools/ui/dist/` e é servida pelo llamafile em
+`http://localhost:8080/`.
 
-### Produção (llamafile)
+# 3. Compilar o llamafile (cosmocc — cross-compiler)
+./configure
+make -j$(nproc)
 
-```bash
-# Baixar o runtime llamafile e um modelo GGUF
-# Exemplo com o modelo base:
-llamafile -m modelos/qwen3.5-4b-q4_k_s.gguf --server --nobrowser --host 0.0.0.0
+# 4. Executar
+./llamafile -m modelo.gguf --server --host 0.0.0.0
 ```
 
-A UI compilada está em `llama.cpp/tools/ui/dist/` e é servida pelo llamafile em `http://localhost:8080/`.
+> **Nota:** O passo 1 (`apply-patches.sh`) modifica o submódulo `llama.cpp` com patches
+> da engine. Essas modificações NÃO devem ser commitadas — a fonte de verdade
+> está em `llama.cpp.patches/`. Use `git -C llama.cpp reset --hard && git -C llama.cpp clean -fdx`
+> para restaurar o estado limpo do submódulo.
 
-### Build da UI
+### Build apenas da UI (desenvolvimento com hot reload)
 
 ```bash
 cd llama.cpp/tools/ui
-npm run build
+npm install
+NODE_OPTIONS="--insecure-http-parser" npx vite dev --host 0.0.0.0
 ```
+
+Acesse `http://localhost:5173/` — o Vite faz proxy para `localhost:8080` (llama-server).
 
 ---
 
